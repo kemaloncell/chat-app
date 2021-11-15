@@ -17,6 +17,10 @@ io.on('connection', (socket) => {
   //Incoming data capture
   socket.on('chat', (data) => {
     // Broadcast Send data to All Sockets
-    io.socket.emit('chat', data);
+    io.sockets.emit('chat', data);
+  });
+
+  socket.on('typing', (data) => {
+    socket.broadcast.emit('typing', data);
   });
 });

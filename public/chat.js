@@ -5,17 +5,27 @@ const sender = document.getElementById('sender');
 const message = document.getElementById('message');
 const submitBtn = document.getElementById('submitBtn');
 const output = document.getElementById('output');
-const sender = document.getElementById('feedback');
+const feedback = document.getElementById('feedback');
 
 //Sending data to the connected socket
 submitBtn.addEventListener('click', () => {
   socket.emit('chat', {
     message: message.value,
-    sender: FileSystemDirectoryEntry.value,
+    sender: sender.value,
   });
 });
 
 //Incoming data capture
 socket.on('chat', (data) => {
-  output.innerHTML += `<p><strong>${data.sender}</strong>${data.message}</p>`;
+  feedback.innerHTML = '';
+  output.innerHTML += `<p><strong>${data.sender} : </strong>${data.message}</p>`;
+  message.value = '';
+});
+
+message.addEventListener('keypress', () => {
+  socket.emit('typing', sender.value);
+});
+
+socket.on('typing', (data) => {
+  feedback.innerHTML = `<p>${data} writing...</p>`;
 });
